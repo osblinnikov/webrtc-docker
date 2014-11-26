@@ -1,0 +1,105 @@
+<html>
+    <head>
+        <script>
+
+var RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+var RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.webkitRTCSessionDescription;
+var RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || window.webkitRTCIceCandidate;
+var URL = window.webkitURL || window.URL;
+
+var pcConfig = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
+var pcOptions = { optional: [ {DtlsSrtpKeyAgreement: true} ] }
+var pc = null;
+
+function error(e)
+{
+    console.log("Error: " + e);
+}
+
+function start()
+{
+    if (pc)
+        return;
+
+    pc = new RTCPeerConnection(pcConfig, pcOptions);
+       
+    pc.onaddstream = function(obj)
+    {
+        var video = document.getElementById("video");
+
+        console.log("onaddstream");
+        console.log(obj);
+        video.src = URL.createObjectURL(obj.stream);
+        video.play();
+    }
+
+    pc.onicecandidate = function(event)
+    {
+        console.log("onicecandidate");
+        if (event.candidate)
+        {
+            var candidate = 
+            {
+                sdpMLineIndex: event.candidate.sdpMLineIndex,
+                sdpMid: event.candidate.sdpMid,
+                candidate: event.candidate.candidate
+            };
+            
+            document.getElementById("icecandidates").value += JSON.stringify(candidate) + "\n";
+        }
+    }
+
+    var offer = document.getElementById("offer").value;
+    var offerSdp = { "sdp": offer, "type": "offer" };
+
+    pc.setRemoteDescription(new RTCSessionDescription(offerSdp), function() 
+    {
+        pc.createAnswer(function(answer) 
+        {
+            pc.setLocalDescription(new RTCSessionDescription(answer), function() 
+            {
+                document.getElementById("answer").value = answer.sdp;
+            }, error);
+        }, error);
+    }, error);
+}
+
+function processOtherIceCandidates()
+{
+    var candidates = document.getElementById("othericecandidates").value.split("\n");
+
+    for (var i = 0 ; i < candidates.length ; i++)
+    {
+        if (candidates[i].trim().length == 0)
+            continue;
+
+        var cand = JSON.parse("" + candidates[i]);
+        console.log(cand);
+        pc.addIceCandidate(new RTCIceCandidate(cand));
+    }
+}
+
+        </script>
+    </head>
+    <body>
+        <h1>Receiver</h1>
+        Video:<br>
+        <video id="video"></video><br>
+        <button onclick="start()">Start</button>
+        <button onclick="processOtherIceCandidates()">Process remote ICE candidates</button><br>
+        <table>
+            <tr>
+                <td>Paste the SDP info from the sender here<br>
+                    <textarea id="offer" rows="20" cols="60"></textarea></td>
+                <td>Copy this answer back to the sender<br>
+                    <textarea id="answer" rows="20" cols="60"></textarea></td>
+            </tr>
+            <tr>
+                <td>This is ICE info for the local host, we'll need to send it to the remote end<br>
+                    <textarea id="icecandidates" rows="10" cols="60"></textarea></td>
+                <td>Paste the ICE info from the remote host here and press 'process ICE candidates'<br>
+                    <textarea id="othericecandidates" rows="10" cols="60"></textarea></td>
+            </tr>
+        </table>
+    </body>
+</html>

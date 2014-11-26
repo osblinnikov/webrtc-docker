@@ -1,0 +1,3 @@
+#!/bin/bash
+sudo /usr/bin/supervisord -c /supervisord.conf
+$1

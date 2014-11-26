@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Terminal
+Exec=/bin/bash
+Terminal=true
+Type=Application
+Icon=/home/webrtc/xterm.png
+Comment=Open xterm

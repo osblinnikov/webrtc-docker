@@ -1,0 +1,12 @@
+#!/bin/bash
+# Absolute path to this script. /home/user/bin/foo.sh
+SCRIPT=$(readlink -f $0)
+# Absolute path this script is in. /home/user/bin
+SCRIPTPATH=`dirname $SCRIPT`
+
+docker start rtc
+
+if [ "$?" -ne "0" ]
+then
+  docker run --name="rtc" -p 6080:6080 -v $SCRIPTPATH/workspace:/home/webrtc/workspace -t -i oleg/webrtc $1
+fi
