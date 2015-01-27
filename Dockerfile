@@ -10,7 +10,8 @@ FROM ubuntu:trusty
 MAINTAINER Oleg Blinnikov, osblinnikov@gmail.com
 
 # make sure the package repository is up to date
-RUN apt-get -y update && apt-get -y upgrade
+RUN apt-get -y update
+RUN apt-get -y upgrade
 
 # Adding vnc server
 # no Upstart or DBus
@@ -65,17 +66,25 @@ RUN dpkg --add-architecture i386 && \
             deb-src http://us.archive.ubuntu.com/ubuntu/ trusty-updates multiverse\n \
             deb http://archive.canonical.com/ trusty partner" >> /etc/apt/sources.list && \
     apt-get update && \ 
-    apt-get install -y lsb-release file gcc-multilib && \
-    /home/webrtc/webrtc.googlecode.com/install-build-deps.sh --no-prompt --syms && \
+    apt-get install -y lsb-release file gcc-multilib
+
+RUN /home/webrtc/webrtc.googlecode.com/install-build-deps.sh --no-prompt --syms && \
     /home/webrtc/webrtc.googlecode.com/install-build-deps-android.sh --no-prompt --syms
 
 RUN cd /home/webrtc/webrtc.googlecode.com && \
-    PATH=$PATH:/home/webrtc/depot_tools gclient config http://webrtc.googlecode.com/svn/trunk && \
-    echo "target_os = ['android', 'unix']" >> .gclient && \
-    JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/ PATH=$PATH:/home/webrtc/depot_tools gclient sync --force --jobs 100 && \
-    chown -R webrtc:webrtc *
+    JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64 \
+    PATH=$PATH:/home/webrtc/depot_tools \
+    GYP_DEFINES="enable_tracing=1 build_with_libjingle=1 build_with_chromium=0 libjingle_java=1 OS=android" \
+    GYP_GENERATOR_FLAGS="output_dir=out_android" \
+    fetch webrtc_android
 
-RUN cd /home/webrtc/webrtc.googlecode.com/trunk && \
+# RUN cd /home/webrtc/webrtc.googlecode.com && \
+#     PATH=$PATH:/home/webrtc/depot_tools gclient config http://webrtc.googlecode.com/svn/trunk && \
+#     echo "target_os = ['android', 'unix']" >> .gclient && \
+#     JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/ PATH=$PATH:/home/webrtc/depot_tools gclient sync --force --jobs 100 && \
+RUN cd /home/webrtc/webrtc.googlecode.com && chown -R webrtc:webrtc *
+
+RUN cd /home/webrtc/webrtc.googlecode.com/src && \
     GYP_DEFINES="enable_tracing=1 build_with_libjingle=1 build_with_chromium=0 libjingle_java=1 OS=android" \
     GYP_GENERATOR_FLAGS="output_dir=out_android" \
     JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/ PATH=$PATH:/home/webrtc/depot_tools gclient runhooks && \
@@ -90,9 +99,9 @@ RUN chmod 755 /usr/local/bin/startcontainer
 # as a user...
 USER webrtc
 
-ADD build.bash /home/webrtc/webrtc.googlecode.com/trunk/build.bash
-RUN sudo chmod 755 /home/webrtc/webrtc.googlecode.com/trunk/build.bash
-RUN /home/webrtc/webrtc.googlecode.com/trunk/build.bash
+# ADD build.bash /home/webrtc/webrtc.googlecode.com/src/build.bash
+# RUN sudo chmod 755 /home/webrtc/webrtc.googlecode.com/src/build.bash
+# RUN /home/webrtc/webrtc.googlecode.com/src/build.bash
 
 ADD noVNC /noVNC/
 ADD supervisord.conf /
