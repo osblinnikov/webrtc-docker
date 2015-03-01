@@ -1,4 +1,4 @@
-b# Name: webrtcDocker
+# Name: webrtcDocker
 # Description: installs webrtc in ubuntu trusty 14.04 environment
 #
 # VERSION       1.0
