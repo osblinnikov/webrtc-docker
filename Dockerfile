@@ -91,6 +91,13 @@ RUN cd /home/webrtc/webrtc.googlecode.com/src && \
     JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/ PATH=$PATH:/home/webrtc/depot_tools ninja -C out_android/Debug AppRTCDemo && \
     JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/ PATH=$PATH:/home/webrtc/depot_tools ninja -C out_android/Release AppRTCDemo
 
+RUN cd /home/webrtc/webrtc.googlecode.com/src && \
+    GYP_DEFINES="enable_tracing=1 build_with_libjingle=1 build_with_chromium=0 libjingle_java=1" \
+    GYP_GENERATOR_FLAGS="output_dir=out" \
+    JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/ PATH=$PATH:/home/webrtc/depot_tools gclient runhooks && \
+    JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/ PATH=$PATH:/home/webrtc/depot_tools ninja -C out/Debug && \
+    JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/ PATH=$PATH:/home/webrtc/depot_tools ninja -C out/Release
+
 
 # Launch bash when launching the container
 ADD startcontainer /usr/local/bin/startcontainer

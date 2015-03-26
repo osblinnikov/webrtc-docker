@@ -1,7 +1,7 @@
-webrtc docker container
+webrtcDocker
 ============
 
-Docker container for [WebRTC](http://www.webrtc.org/native-code/android). Runs ubuntu 14.04 trusty
+Docker container for [WebRTC](http://www.webrtc.org/reference/getting-started). Runs ubuntu 14.04 trusty
 
 get from docker hub:
 
@@ -10,8 +10,8 @@ get from docker hub:
 
 or to build container from dockerfile, type command in current directory:
 
-    git clone https://github.com/osblinnikov/webrtc-docker.git
-    cd webrtc-docker
+    git clone https://github.com/osblinnikov/webrtcDocker.git
+    cd webrtcDocker
     docker build -t oleg/webrtc .
 
 To start the fresh built container simply type:
