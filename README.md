@@ -10,8 +10,8 @@ get from docker hub:
 
 or to build container from dockerfile, type command in current directory:
 
-    git clone https://github.com/osblinnikov/webrtcDocker.git
-    cd webrtcDocker
+    git clone https://github.com/osblinnikov/webrtc-docker.git
+    cd webrtc-docker
     docker build -t oleg/webrtc .
 
 To start the fresh built container simply type:
