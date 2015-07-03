@@ -18,13 +18,13 @@ To start the fresh built container simply type:
 
     ./run
 
-Lets test the webRTC build. In the opened container bash console type:
+Lets test the WebRTC build:
     
     sudo apt-get install qt-sdk
-    cd /home/webrtc/workspace/qtwebrtc
-    qmake-qt4 WEBRTCTRUNK=/home/webrtc/webrtc.googlecode.com/trunk
+    cd ./workspace/qtwebrtc
+    qmake-qt4 WEBRTCTRUNK=../linux
     make
-    ./qtwebrtc -display :1
+    ./qtwebrtc
 
 Last command will start qt application in vnc, it's the right time to test noVNC installation:
 

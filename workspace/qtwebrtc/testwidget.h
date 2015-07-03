@@ -58,6 +58,7 @@ public:
 	void OnRenegotiationNeeded();
 	void OnIceChange();
 	void OnIceCandidate(const webrtc::IceCandidateInterface* candidate);
+	void OnDataChannel(webrtc::DataChannelInterface* data_channel);
 signals:
 	void signalIceCandidate(const QString &iceCandidate);
 };

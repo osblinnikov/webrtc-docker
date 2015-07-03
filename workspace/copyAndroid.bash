@@ -19,6 +19,12 @@ cp ~/webrtc.googlecode.com/src/out_android/Release/lib/libjingle_peerconnection_
 rm -R $SCRIPTPATH/linux
 mkdir -p $SCRIPTPATH/linux
 
-find ~/webrtc.googlecode.com/src -name '*.h' | cpio -pdm $SCRIPTPATH/linux/include
-cp -R ~/webrtc.googlecode.com/src/out/Release $SCRIPTPATH/linux/Release
-cp -R ~/webrtc.googlecode.com/src/out/Debug $SCRIPTPATH/linux/Debug
+cd ~/webrtc.googlecode.com/src
+find . -name '*.h' | cpio -pdm $SCRIPTPATH/linux
+cd ~/webrtc.googlecode.com/src/out/Release
+find . -name '*.a'  | cpio -pdm $SCRIPTPATH/linux/Release
+find . -name '*.so' | cpio -pdm $SCRIPTPATH/linux/Release
+
+cd ~/webrtc.googlecode.com/src/out/Debug
+find . -name '*.a'  | cpio -pdm $SCRIPTPATH/linux/Debug
+find . -name '*.so' | cpio -pdm $SCRIPTPATH/linux/Debug

@@ -1,6 +1,6 @@
 #include "talk/media/devices/deviceinfo.h"
 #include "talk/media/base/mediacommon.h"
-//#include "talk/base/logging.h"
+#include "base/logging.h"
 #include "talk/media/base/videoframe.h"
 #include "testvideocapturer.h"
 #include <QElapsedTimer>
@@ -76,7 +76,7 @@ void CaptureThread::run()
 			frame.fourcc = FOURCC_ABGR;
 			frame.data_size = m_imageDataLen;
 
-			if (frame.width*frame.height*4 != m_imageDataLen)
+			if (frame.width*frame.height*4 != (int)m_imageDataLen)
 				LOG(LS_INFO) << "CaptureThread: with and height don't match size for ABGR data, skipping frame";
 			else
 			{

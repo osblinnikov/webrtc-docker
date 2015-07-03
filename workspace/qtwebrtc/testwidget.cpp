@@ -46,6 +46,10 @@ TestConnectionObserver::~TestConnectionObserver()
 	cerr << "TestConnectionObserver::~TestConnectionObserver" << endl;
 }
 
+void TestConnectionObserver::OnDataChannel(webrtc::DataChannelInterface* data_channel){
+
+}
+
 void TestConnectionObserver::OnError()
 {
 	cerr << "TestConnectionObserver::OnError" << endl;
@@ -190,7 +194,7 @@ void TestWidget::onStartClicked()
 	stream->AddTrack(audioTrack);
   	stream->AddTrack(videoTrack);
 
-  	if (!m_peerConnection->AddStream(stream, 0))
+  	if (!m_peerConnection->AddStream(stream))
 	{
     		cerr << "Adding stream to PeerConnection failed" << endl;
 		return;
